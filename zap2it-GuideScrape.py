@@ -374,7 +374,7 @@ def loadZipCodes():
 
 
 #Run the Scraper
-optConfigFile = './zap2itconfig.ini'
+optConfigFile = '/guide/zap2itconfig.ini'
 optGuideFile = 'xmlguide.xmltv'
 optLanguage = 'en'
 
@@ -445,5 +445,3 @@ if args.web is not None and args.web:
 
 
 guide.BuildGuide()
-
-
