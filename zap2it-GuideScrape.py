@@ -11,7 +11,7 @@ ADDED_EVENTS = []
 
 class Zap2ItGuideScrape():
 
-    def __init__(self,configLocation="./zap2itconfig.ini",outputFile="xmlguide.xmltv"):
+    def __init__(self,configLocation="/guide/zap2itconfig.ini",outputFile="xmlguide.xmltv"):
         self.confLocation = configLocation
         self.outputFile=outputFile
         if not os.path.exists(self.confLocation):
