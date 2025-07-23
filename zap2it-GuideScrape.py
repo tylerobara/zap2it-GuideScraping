@@ -103,9 +103,9 @@ class Zap2ItGuideScrape():
         parameters = {
             'Activity_ID': 1,
             'FromPage': "TV%20Guide",
-            'AffiliateId': "gapzap",
+            'AffiliateId': "orbebb",
             'token': self.zapToken,
-            'aid': 'gapzap',
+            'aid': 'orbebb',
             'lineupId': lineupId,
             'timespan': 3,
             'headendId': headendId,
