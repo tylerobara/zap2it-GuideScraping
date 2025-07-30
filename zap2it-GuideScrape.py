@@ -4,6 +4,12 @@ import urllib.parse, urllib.request, urllib.error
 import time, datetime
 import xml.dom.minidom
 import sys, os, argparse
+import ssl
+
+# Create unverified SSL context for certificate issues
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
 #Use Globals to track state of the guide
 ADDED_CHANNELS = []
@@ -57,7 +63,7 @@ class Zap2ItGuideScrape():
         #Get token from login form
         authRequest = self.BuildAuthRequest()
         try:
-            authResponse = urllib.request.urlopen(authRequest).read()
+            authResponse = urllib.request.urlopen(authRequest, context=ssl_context).read()
         except urllib.error.URLError as e:
             print("Error connecting to tvlistings.gracenote.com")
             print(e.reason)
@@ -78,7 +84,7 @@ class Zap2ItGuideScrape():
         idRequest = self.BuildIDRequest(zipCode)
         try:
             print("Loading provider ID data from: ",idRequest.full_url)
-            idResponse = urllib.request.urlopen(idRequest).read()
+            idResponse = urllib.request.urlopen(idRequest, context=ssl_context).read()
         except urllib.error.URLError as e:
             print("Error loading provider IDs:")
             print(e.reason)
@@ -127,7 +133,7 @@ class Zap2ItGuideScrape():
         request = self.BuildDataRequest(time,zipCode)
         print("Load Guide for time: ",str(time)," :: ",zipCode)
         #print(request.full_url)
-        response = urllib.request.urlopen(request).read()
+        response = urllib.request.urlopen(request, context=ssl_context).read()
         return json.loads(response)
     def AddChannelsToGuide(self, json):
         global ADDED_CHANNELS
@@ -313,6 +319,7 @@ class Zap2ItGuideScrape():
         self.rootEl.setAttribute("generator-info-url","daniel@widrick.net")
     def BuildGuide(self):
         self.Authenticate()
+        time.sleep(5)
         self.guideXML = xml.dom.minidom.Document()
         impl = xml.dom.minidom.getDOMImplementation()
         doctype = impl.createDocumentType("tv","","xmltv.dtd")
@@ -328,6 +335,7 @@ class Zap2ItGuideScrape():
                 zipCode = str(zipCode)
                 zipCode = zipCode.strip()
                 zip_json = self.GetData(loopTime,zipCode)
+                time.sleep(5)
                 if addChannels:
                     self.AddChannelsToGuide(zip_json)   
                 self.AddEventsToGuide(zip_json)
